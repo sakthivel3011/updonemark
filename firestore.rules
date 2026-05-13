@@ -1,0 +1,352 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===== HELPER FUNCTIONS =====
+    
+    // Get current user data
+    function getUser() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    // Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Check if user is accessing their own document
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+    
+    // Check if user has specific role
+    function hasRole(role) {
+      return request.auth != null && getUser().role == role;
+    }
+    
+    // Check if user is super admin
+    function isSuperAdmin() {
+      return request.auth == null || hasRole('superadmin');
+    }
+    
+    // Check if user is college admin for specific college
+    function isCollegeAdmin(collegeId) {
+      return request.auth != null &&
+             getUser().role == 'collegeadmin' &&
+             getUser().collegeId == collegeId;
+    }
+    
+    // Check if user belongs to specific college (any role)
+    function belongsToCollege(collegeId) {
+      return request.auth != null && getUser().collegeId == collegeId;
+    }
+    
+    // Check if user is approved coordinator for specific college and club
+    function isCoordinator(collegeId, clubId) {
+      return request.auth != null &&
+             getUser().role == 'coordinator' &&
+             getUser().collegeId == collegeId &&
+             getUser().clubId == clubId &&
+             getUser().status == 'approved';
+    }
+    
+    // Check if user is any coordinator in a college (approved or pending)
+    function isAnyCoordinatorInCollege(collegeId) {
+      return request.auth != null &&
+             getUser().role == 'coordinator' &&
+             getUser().collegeId == collegeId;
+    }
+    
+    // Check if user is approved coordinator in college
+    function isApprovedCoordinatorInCollege(collegeId) {
+      return request.auth != null &&
+             getUser().role == 'coordinator' &&
+             getUser().collegeId == collegeId &&
+             getUser().status == 'approved';
+    }
+    
+    // Check if user is admin (superadmin or collegeadmin)
+    function isAdmin() {
+      return request.auth != null && (
+        getUser().role == 'superadmin' || 
+        getUser().role == 'collegeadmin'
+      );
+    }
+
+    // ===== EVENTS COLLECTION GROUP =====
+    // Required for collectionGroup('events') queries to find unique IDs and resolve QR paths
+    match /{path=**}/events/{eventId} {
+      allow read: if true;
+    }
+
+    // ===== ATTENDANCE COLLECTION GROUP =====
+    // Required for collectionGroup('attendance') queries for analytics
+    match /{path=**}/attendance/{attendanceId} {
+      allow read: if true;
+    }
+
+    // ===== COLLEGES COLLECTION =====
+    
+    match /colleges/{collegeId} {
+      // Anyone can read colleges (needed for signup)
+      allow read: if true;
+      
+      // Only superadmin can create colleges
+      // Super Admin uses sessionStorage (no Firebase auth), so also allow when request.auth == null
+      allow create: if request.auth == null;
+      
+      // Superadmin can update anything, college admin can only update academicYear
+      // Super Admin uses sessionStorage (no Firebase auth), so also allow when request.auth == null
+      allow update: if request.auth == null || 
+        (isCollegeAdmin(collegeId) && 
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['academicYear', 'currentSemester']));
+      
+      // Only superadmin can delete
+      // Super Admin uses sessionStorage (no Firebase auth), so also allow when request.auth == null
+      allow delete: if request.auth == null;
+
+      // ===== CLUBS SUBCOLLECTION =====
+      
+      match /clubs/{clubId} {
+        // College admin can read/write clubs in their college
+        // Coordinators in the college can read clubs (for profile setup)
+        // Note: Allow list queries for college admins to fetch all clubs
+        allow get: if isCollegeAdmin(collegeId) || isAnyCoordinatorInCollege(collegeId);
+        allow list: if isCollegeAdmin(collegeId) || isAnyCoordinatorInCollege(collegeId);
+        
+        // Only college admin can create/update/delete clubs
+        allow create: if isCollegeAdmin(collegeId)
+          && request.resource.data.keys().hasAll(['name', 'createdAt']);
+        allow update: if isCollegeAdmin(collegeId);
+        allow delete: if isCollegeAdmin(collegeId);
+
+        // ===== EVENTS SUBCOLLECTION =====
+        
+        match /events/{eventId} {
+          // Anyone can read events (needed for QR scanning by students)
+          // Coordinators and college admins can also read
+          allow read: if true; // Public read for QR scanning
+          
+          // Coordinators can create events for their club
+          // GPS fields (eventLat, eventLng, eventRadius) are optional - only required if GPS is enabled
+          allow create: if isCoordinator(collegeId, clubId)
+            && request.resource.data.keys().hasAll(['eventName', 'date', 'venue', 'createdAt', 'createdBy', 'isActive']);
+          
+          // Coordinators can update their own events, limited fields
+          // College admins can toggle isActive (stop/restart events)
+          allow update: if (
+              (isCoordinator(collegeId, clubId)
+              && request.resource.data.diff(resource.data).affectedKeys().hasAny([
+                'isActive', 'isPaused', 'qrVersion', 'lastUpdatedAt', 'gpsEnabled', 
+                'radiusMeters', 'eventRadius', 'eventLat', 'eventLng', 'venueLat', 'venueLng', 'totalScans', 'updatedAt'
+              ])
+            ) || (
+              isCollegeAdmin(collegeId) 
+              && request.resource.data.diff(resource.data).affectedKeys().hasAny(['isActive', 'isPaused'])
+            )
+          );
+          
+          // Only college admin can delete events
+          allow delete: if isCollegeAdmin(collegeId);
+
+          // ===== ATTENDANCE SUBCOLLECTION =====
+          
+          match /attendance/{recordId} {
+            // Coordinators can read attendance for their events
+            // Public can create (for QR scanning) - no auth required
+            allow read: if isCoordinator(collegeId, clubId) || isCollegeAdmin(collegeId);
+            
+            // Anyone can scan QR and mark attendance
+            // GPS fields (gpsLat, gpsLng, gpsAccuracy, distanceFromEvent) are optional - only required if GPS is enabled
+            allow create: if true
+              && request.resource.data.keys().hasAll(['rollNumber', 'studentName', 'department', 'year', 'timestamp', 'status', 'attemptType'])
+              && request.resource.data.eventId == eventId;
+            
+            allow update: if false; // Audit trail is immutable
+            allow delete: if false;
+          }
+
+          // ===== SCAN LOGS SUBCOLLECTION =====
+          
+          match /scanLogs/{logId} {
+            // Public can create scan logs (for QR scanning)
+            // Validates required fields for tracking scans
+            allow create: if true
+              && request.resource.data.keys().hasAll(['timestamp', 'qrVersion', 'eventId'])
+              && request.resource.data.keys().hasAny(['rollNo', 'deviceId', 'ipAddress']);
+            
+            // Coordinators and college admins can read scan logs
+            allow read: if isCoordinator(collegeId, clubId) || isCollegeAdmin(collegeId);
+            allow update, delete: if false;
+          }
+        }
+      }
+    }
+
+    // ===== ACADEMIC YEARS COLLECTION =====
+    
+    match /academicYears/{academicYearId} {
+      // Anyone can read academic years
+      allow read: if true;
+      
+      // Superadmin can create/update/delete academic years
+      // Super Admin uses sessionStorage (no Firebase auth), so also allow when request.auth == null
+      allow create, update, delete: if request.auth == null;
+    }
+
+    // ===== USERS COLLECTION =====
+    
+    match /users/{uid} {
+      // Users can read their own document (any role: coordinator, collegeadmin, superadmin)
+      // College admins can read coordinators in their college
+      // Superadmins can read any user
+      // Super Admin uses sessionStorage (no Firebase auth), so also allow when request.auth == null
+      // NOTE: isOwner check comes first to avoid resource.data access issues
+      allow get: if isOwner(uid) || 
+        isSuperAdmin() ||
+        (request.auth != null && resource.data.role == 'superadmin') ||
+        (isCollegeAdmin(resource.data.collegeId) && resource.data.role == 'coordinator') ||
+        request.auth == null; // Allow Super Admin (no auth) to read users
+      
+      // List users: superadmin can list all users, college admins can list coordinators in their college
+      // Note: For list queries, we can't check resource.data, so we allow based on query constraints
+      // The query in the app filters by role='coordinator' and clubId/collegeId
+      allow list: if request.auth == null || 
+        isSuperAdmin() ||
+        hasRole('collegeadmin') ||
+        hasRole('coordinator');
+      
+      // Create: users can create their own profile
+      // Coordinators: role='coordinator', status='pending'
+      // College admins: role='collegeadmin' (created via login or Super Admin)
+      allow create: if 
+        // Rule 1: Authenticated user creating their own profile
+        (isOwner(uid) && (
+          // Coordinator signup - requires status='pending'
+          (request.resource.data.role == 'coordinator' && request.resource.data.status == 'pending') ||
+          // College admin self-creation (Google/email login)
+          (request.resource.data.role == 'collegeadmin')
+        ))
+        ||
+        // Rule 2: Superadmin can create any user
+        // Super Admin uses sessionStorage (no Firebase auth), so also allow when request.auth == null
+        isSuperAdmin() || request.auth == null
+        ||
+        // Rule 3: College admin can create coordinators in their college
+        (hasRole('collegeadmin') && 
+         request.resource.data.role == 'coordinator' && 
+         request.resource.data.collegeId == getUser().collegeId);
+      
+      // Update own profile: limited fields only
+      allow update: if isOwner(uid)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName', 'photoURL']);
+      
+      // College admin can update coordinators in their college
+      // Fields: status, clubId, clubName, approval info
+      allow update: if hasRole('collegeadmin')
+        && resource.data.role == 'coordinator'
+        && resource.data.collegeId == getUser().collegeId
+        && request.resource.data.diff(resource.data).affectedKeys().hasAny(['status', 'clubId', 'clubName', 'approvedAt', 'approvedBy', 'approved', 'rejectedAt', 'rejectedBy']);
+      
+      // Superadmin can update any user (full access)
+      // Also allow updates for Super Admin using sessionStorage (request.auth may be null)
+      allow update: if request.auth == null || isSuperAdmin();
+      
+      // Delete: college admin can delete coordinators in their college
+      // Superadmin can delete any user
+      // Also allow deletes for Super Admin using sessionStorage
+      allow delete: if request.auth == null || isSuperAdmin() ||
+        (hasRole('collegeadmin') && resource.data.role == 'coordinator' && resource.data.collegeId == getUser().collegeId);
+    }
+
+    // ===== ACTIVITY LOGS =====
+    
+    match /activityLogs/{logId} {
+      // Authenticated users can read logs they have access to
+      // Coordinators see logs for their college/club
+      // College admins see logs for their college
+      // Superadmins see all logs
+      allow read: if isAuthenticated() && (
+        isSuperAdmin() ||
+        (hasRole('collegeadmin') && resource.data.collegeId == getUser().collegeId) ||
+        (hasRole('coordinator') && resource.data.collegeId == getUser().collegeId && resource.data.clubId == getUser().clubId)
+      );
+      
+      // Authenticated users can create logs
+      allow create: if isAuthenticated()
+        && request.resource.data.keys().hasAll(['uid', 'action', 'timestamp']);
+      
+      // No updates or deletes allowed
+      allow update, delete: if false;
+    }
+
+    // ===== MESSAGES (Contact Form) =====
+
+    match /messages/{messageId} {
+      // Anyone can create a message (contact form)
+      allow create: if request.auth != null ||
+        request.resource.data.keys().hasAll(['name', 'email', 'subject', 'message', 'createdAt']);
+
+      // Superadmin and college admins can read
+      allow read: if isSuperAdmin() || hasRole('collegeadmin');
+
+      // Superadmin can update (mark as read)
+      allow update: if isSuperAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read', 'readAt']);
+
+      // Superadmin can delete
+      allow delete: if isSuperAdmin();
+    }
+    
+    // ===== ANALYTICS =====
+    
+    match /analytics/{docId} {
+      // Only admins can read analytics
+      allow read: if isSuperAdmin() || isCollegeAdmin(resource.data.collegeId);
+      
+      // System can create/update analytics (backend functions)
+      // For now, allow authenticated users with proper roles
+      allow create, update: if isSuperAdmin() || 
+        (hasRole('collegeadmin') && request.resource.data.collegeId == getUser().collegeId);
+      
+      allow delete: if isSuperAdmin();
+    }
+    
+    // ===== BACKUP METADATA =====
+    
+    match /backups/{backupId} {
+      // Only superadmin can access backups
+      allow read, create, update, delete: if isSuperAdmin();
+    }
+    
+    // ===== SETTINGS =====
+    
+    match /settings/{settingId} {
+      // Superadmin can read/write all settings
+      // Some settings may be public
+      allow read: if true; // Public settings
+      allow create, update, delete: if isSuperAdmin();
+    }
+    
+    // ===== EVENT DIRECTORY =====
+    // Global directory for fast event lookups by eventId
+    
+    match /eventDirectory/{eventId} {
+      // Anyone can read event directory (needed for QR scanning)
+      allow read: if true;
+      
+      // Coordinators can create event directory entries when creating events
+      allow create: if isAuthenticated() && hasRole('coordinator')
+        && request.resource.data.keys().hasAll(['eventRefPath', 'eventId', 'eventName', 'createdAt']);
+      
+      // Only superadmin can update/delete event directory
+      allow update, delete: if isSuperAdmin();
+    }
+    
+    // ===== DEFAULT DENY =====
+    // Any collection not explicitly matched above is denied
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

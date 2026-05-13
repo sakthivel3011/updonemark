@@ -1,0 +1,33 @@
+{
+  "name": "UpDone Mark",
+  "short_name": "UpDone",
+  "description": "Smart QR Attendance for College Events",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#040F16",
+  "theme_color": "#0B7A75",
+  "icons": [
+    {
+      "src": "app-icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "productivity",
+    "education"
+  ],
+  "lang": "en",
+  "dir": "ltr",
+  "scope": "/",
+  "id": "/",
+  "prefer_related_applications": false
+}
