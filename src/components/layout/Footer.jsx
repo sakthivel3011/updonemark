@@ -147,7 +147,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
           <p className="text-white/40 text-sm">
-            © {currentYear} UpDone. <a href="https://updone.com" target="_blank" rel="noopener noreferrer">
+            © {currentYear} UpDone. <a href="https://updone.vercel.app" target="_blank" rel="noopener noreferrer">
               <span>Developed by <span className="text-teal-light font-semibold">UpDone</span></span>
             </a>
           </p>
