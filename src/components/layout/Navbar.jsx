@@ -65,7 +65,7 @@ export default function Navbar() {
     <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ease-out ${scrolled ? 'bg-white dark:bg-neutral-900 shadow-xl shadow-black/10 dark:shadow-black/30 py-2 border-b border-gray-100 dark:border-white/10' : 'bg-transparent py-4'}`}>
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 z-50">
+        <Link to="https://updone.vercel.app" className="flex items-center gap-2 z-50">
           <img src="/logo1.png" alt="UpDone Mark Logo" className="h-9 md:h-11 object-contain dark:hidden" />
           <img src="/logo.png" alt="UpDone Mark Logo" className="h-9 md:h-11 object-contain hidden dark:block" />
         </Link>
