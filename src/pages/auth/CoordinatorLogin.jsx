@@ -199,7 +199,7 @@ export default function CoordinatorLogin() {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          color: #666;
+          color: #ffffff;
           font-size: 13px;
           cursor: pointer;
           background: none;
@@ -209,7 +209,7 @@ export default function CoordinatorLogin() {
           transition: color 0.2s;
           font-family: inherit;
         }
-        .cl-back:hover { color: #ddd; }
+        .cl-back:hover { color: #cccccc; }
 
         /* ── Heading ── */
         .cl-heading {
@@ -222,7 +222,7 @@ export default function CoordinatorLogin() {
         }
         .cl-sub {
           font-size: 14px;
-          color: #777;
+          color: #ffffff;
           margin-bottom: 36px;
         }
         .cl-sub a {
@@ -266,8 +266,8 @@ export default function CoordinatorLogin() {
           gap: 12px;
           margin-bottom: 22px;
         }
-        .cl-divider-line { flex: 1; height: 1px; background: #2e2e30; }
-        .cl-divider-text { color: #555; font-size: 12px; white-space: nowrap; }
+        .cl-divider-line { flex: 1; height: 1px; background: rgba(255,255,255,0.25); }
+        .cl-divider-text { color: #ffffff; font-size: 12px; white-space: nowrap; }
 
         /* ── Input ── */
         .cl-input-wrap { position: relative; margin-bottom: 14px; }
@@ -275,15 +275,15 @@ export default function CoordinatorLogin() {
           width: 100%;
           padding: 13px 16px;
           background: transparent;
-          border: 1px solid #303032;
+          border: 1px solid rgba(255,255,255,0.3);
           border-radius: 10px;
-          color: #cccccc;
+          color: #ffffff;
           font-size: 14px;
           outline: none;
           transition: border-color 0.2s;
           font-family: inherit;
         }
-        .cl-input::placeholder { color: #484848; }
+        .cl-input::placeholder { color: rgba(255,255,255,0.55); }
         .cl-input:focus { border-color: #0b7a75; }
         .cl-input-pw { padding-right: 44px; }
 
@@ -294,7 +294,7 @@ export default function CoordinatorLogin() {
           transform: translateY(-50%);
           background: none;
           border: none;
-          color: #555;
+          color: #ffffff;
           cursor: pointer;
           display: flex;
           align-items: center;
@@ -341,7 +341,7 @@ export default function CoordinatorLogin() {
         .cl-terms {
           margin-top: 20px;
           font-size: 12px;
-          color: #555;
+          color: #ffffff;
           line-height: 1.65;
         }
         .cl-terms a { color: #0d9488; text-decoration: none; }
@@ -513,8 +513,6 @@ export default function CoordinatorLogin() {
             {/* Terms */}
             <p className="cl-terms">
               By signing in, you agree to UpDone Mark's{' '}
-              <a href="/privacy">Privacy Policy</a> and{' '}
-              <a href="/terms">Terms of Service</a>.
             </p>
 
           </div>{/* end .cl-form-box */}

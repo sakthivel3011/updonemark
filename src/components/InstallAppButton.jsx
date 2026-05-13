@@ -45,7 +45,6 @@ export default function InstallAppButton() {
       setIsInstallable(false);
       setDeferredPrompt(null);
       window.deferredPWAInstallPrompt = null;
-      toast.success('App installed successfully!');
     };
 
     window.addEventListener('pwa-installable', handlePWAInstallable);

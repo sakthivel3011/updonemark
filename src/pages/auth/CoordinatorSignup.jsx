@@ -198,24 +198,24 @@ export default function CoordinatorSignup() {
         }
         .cs-step-dot.active  { background:#4f46e5; color:#fff; }
         .cs-step-dot.done    { background:#4f46e5; color:#fff; }
-        .cs-step-dot.pending { background:#2a2a2c; color:#555; border:1.5px solid #333; }
-        .cs-step-label { font-size:12px; font-weight:600; color:#777; }
+        .cs-step-dot.pending { background:#2a2a2c; color:#aaa; border:1.5px solid #444; }
+        .cs-step-label { font-size:12px; font-weight:600; color:#ffffff; }
         .cs-step-label.active { color:#818cf8; }
-        .cs-step-line { width:36px; height:1px; background:#2e2e30; margin:0 8px; }
+        .cs-step-line { width:36px; height:1px; background:rgba(255,255,255,0.25); margin:0 8px; }
 
         /* Back btn */
         .cs-back {
           display:inline-flex; align-items:center; gap:6px;
-          color:#666; font-size:13px; cursor:pointer;
+          color:#ffffff; font-size:13px; cursor:pointer;
           background:none; border:none; padding:0; margin-bottom:32px;
           transition:color 0.2s; font-family:inherit;
         }
-        .cs-back:hover { color:#ddd; }
+        .cs-back:hover { color:#cccccc; }
 
         /* Welcome */
         .cs-welcome { font-size:13px; font-weight:600; color:#818cf8; letter-spacing:0.5px; text-transform:uppercase; margin-bottom:4px; }
         .cs-heading { font-size:30px; font-weight:800; color:#fff; margin-bottom:8px; letter-spacing:-0.5px; line-height:1.15; }
-        .cs-sub { font-size:14px; color:#777; margin-bottom:28px; }
+        .cs-sub { font-size:14px; color:#ffffff; margin-bottom:28px; }
         .cs-sub a { color:#818cf8; font-weight:500; text-decoration:none; }
         .cs-sub a:hover { text-decoration:underline; }
 
@@ -224,7 +224,7 @@ export default function CoordinatorSignup() {
         .cs-college-card {
           display:flex; align-items:center; gap:14px;
           padding:14px 16px; border-radius:10px;
-          border:1.5px solid #2e2e30; cursor:pointer;
+          border:1.5px solid rgba(255,255,255,0.2); cursor:pointer;
           background:transparent; transition:all 0.18s; font-family:inherit; text-align:left;
         }
         .cs-college-card:hover { border-color:#4f46e5; background:rgba(79,70,229,0.06); }
@@ -234,26 +234,26 @@ export default function CoordinatorSignup() {
           background:rgba(79,70,229,0.15); display:flex; align-items:center; justify-content:center;
           font-size:18px; flex-shrink:0;
         }
-        .cs-college-name { font-size:14px; font-weight:600; color:#ddd; }
-        .cs-college-city { font-size:12px; color:#666; margin-top:2px; }
-        .cs-college-check { margin-left:auto; width:18px; height:18px; border-radius:50%; border:2px solid #2e2e30; flex-shrink:0; transition:all 0.18s; }
+        .cs-college-name { font-size:14px; font-weight:600; color:#ffffff; }
+        .cs-college-city { font-size:12px; color:rgba(255,255,255,0.6); margin-top:2px; }
+        .cs-college-check { margin-left:auto; width:18px; height:18px; border-radius:50%; border:2px solid rgba(255,255,255,0.3); flex-shrink:0; transition:all 0.18s; }
         .cs-college-card.selected .cs-college-check { background:#4f46e5; border-color:#4f46e5; display:flex; align-items:center; justify-content:center; }
-        .cs-college-empty { font-size:14px; color:#555; text-align:center; padding:20px 0; }
+        .cs-college-empty { font-size:14px; color:rgba(255,255,255,0.6); text-align:center; padding:20px 0; }
 
         /* Input */
         .cs-input-wrap { position:relative; margin-bottom:14px; }
         .cs-input {
           width:100%; padding:13px 16px;
-          background:transparent; border:1px solid #303032; border-radius:10px;
-          color:#ccc; font-size:14px; outline:none;
+          background:transparent; border:1px solid rgba(255,255,255,0.3); border-radius:10px;
+          color:#ffffff; font-size:14px; outline:none;
           transition:border-color 0.2s; font-family:inherit;
         }
-        .cs-input::placeholder { color:#484848; }
+        .cs-input::placeholder { color:rgba(255,255,255,0.55); }
         .cs-input:focus { border-color:#4f46e5; }
         .cs-input-pw { padding-right:44px; }
         .cs-eye {
           position:absolute; right:14px; top:50%; transform:translateY(-50%);
-          background:none; border:none; color:#555; cursor:pointer; display:flex; align-items:center; padding:0;
+          background:none; border:none; color:#ffffff; cursor:pointer; display:flex; align-items:center; padding:0;
         }
         .cs-eye:hover { color:#4f46e5; }
 
@@ -270,8 +270,8 @@ export default function CoordinatorSignup() {
 
         /* Divider */
         .cs-divider { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
-        .cs-divider-line { flex:1; height:1px; background:#2e2e30; }
-        .cs-divider-text { color:#555; font-size:12px; white-space:nowrap; }
+        .cs-divider-line { flex:1; height:1px; background:rgba(255,255,255,0.25); }
+        .cs-divider-text { color:#ffffff; font-size:12px; white-space:nowrap; }
 
         /* Submit */
         .cs-submit {
@@ -287,7 +287,7 @@ export default function CoordinatorSignup() {
         .cs-spinner { width:18px; height:18px; border:2px solid rgba(255,255,255,0.35); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; }
 
         /* Terms */
-        .cs-terms { margin-top:18px; font-size:12px; color:#555; line-height:1.65; }
+        .cs-terms { margin-top:18px; font-size:12px; color:#ffffff; line-height:1.65; }
         .cs-terms a { color:#818cf8; text-decoration:none; }
         .cs-terms a:hover { text-decoration:underline; }
 
@@ -443,8 +443,6 @@ export default function CoordinatorSignup() {
 
                 <p className="cs-terms">
                   By registering, you agree to UpDone Mark's{' '}
-                  <a href="/privacy">Privacy Policy</a> and{' '}
-                  <a href="/terms">Terms of Service</a>.
                 </p>
               </div>
             )}

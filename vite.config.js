@@ -27,7 +27,7 @@ export default defineConfig({
       includeAssets: ['favicon.ico', 'logo192.png', 'logo512.png'],
       manifest: {
         name: 'UpDone Mark',
-        short_name: 'UpDone',
+        short_name: 'UpDone Mark',
         description: 'Smart QR Attendance for College Events',
         theme_color: '#0B7A75',
         background_color: '#040F16',
@@ -35,8 +35,10 @@ export default defineConfig({
         orientation: 'portrait',
         start_url: '/',
         icons: [
-          { src: 'logo192.png', sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
-          { src: 'logo512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
+          { src: 'app-icon.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: 'app-icon.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: 'app-icon.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+          { src: 'app-icon.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
         ]
       },
       workbox: {

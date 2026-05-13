@@ -236,7 +236,7 @@ export default function CollegeAdminLogin() {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          color: #666;
+          color: #ffffff;
           font-size: 13px;
           cursor: pointer;
           background: none;
@@ -246,7 +246,7 @@ export default function CollegeAdminLogin() {
           transition: color 0.2s;
           font-family: inherit;
         }
-        .ca-back:hover { color: #ddd; }
+        .ca-back:hover { color: #cccccc; }
 
         /* ── Welcome line ── */
         .ca-welcome {
@@ -269,7 +269,7 @@ export default function CollegeAdminLogin() {
         }
         .ca-sub {
           font-size: 14px;
-          color: #777;
+          color: #ffffff;
           margin-bottom: 36px;
         }
 
@@ -307,8 +307,8 @@ export default function CollegeAdminLogin() {
           gap: 12px;
           margin-bottom: 22px;
         }
-        .ca-divider-line { flex: 1; height: 1px; background: #2e2e30; }
-        .ca-divider-text { color: #555; font-size: 12px; white-space: nowrap; }
+        .ca-divider-line { flex: 1; height: 1px; background: rgba(255,255,255,0.25); }
+        .ca-divider-text { color: #ffffff; font-size: 12px; white-space: nowrap; }
 
         /* ── Input ── */
         .ca-input-wrap { position: relative; margin-bottom: 14px; }
@@ -316,15 +316,15 @@ export default function CollegeAdminLogin() {
           width: 100%;
           padding: 13px 16px;
           background: transparent;
-          border: 1px solid #303032;
+          border: 1px solid rgba(255,255,255,0.3);
           border-radius: 10px;
-          color: #cccccc;
+          color: #ffffff;
           font-size: 14px;
           outline: none;
           transition: border-color 0.2s;
           font-family: inherit;
         }
-        .ca-input::placeholder { color: #484848; }
+        .ca-input::placeholder { color: rgba(255,255,255,0.55); }
         .ca-input:focus { border-color: #4f83f1; }
         .ca-input-pw { padding-right: 44px; }
 
@@ -335,7 +335,7 @@ export default function CollegeAdminLogin() {
           transform: translateY(-50%);
           background: none;
           border: none;
-          color: #555;
+          color: #ffffff;
           cursor: pointer;
           display: flex;
           align-items: center;
@@ -382,7 +382,7 @@ export default function CollegeAdminLogin() {
         .ca-terms {
           margin-top: 20px;
           font-size: 12px;
-          color: #555;
+          color: #ffffff;
           line-height: 1.65;
         }
         .ca-terms a { color: #4f83f1; text-decoration: none; }
@@ -543,9 +543,7 @@ export default function CollegeAdminLogin() {
 
             {/* Terms */}
             <p className="ca-terms">
-              By signing in, you agree to UpDone Mark's{' '}
-              <a href="/privacy">Privacy Policy</a> and{' '}
-              <a href="/terms">Terms of Service</a>.
+              By signing in, you agree to UpDone Mark's
             </p>
 
           </div>{/* end .ca-form-box */}

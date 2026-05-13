@@ -124,7 +124,7 @@ export default function SuperAdminLogin() {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          color: #666;
+          color: #ffffff;
           font-size: 13px;
           cursor: pointer;
           background: none;
@@ -134,7 +134,7 @@ export default function SuperAdminLogin() {
           transition: color 0.2s;
           font-family: inherit;
         }
-        .sa-back:hover { color: #ddd; }
+        .sa-back:hover { color: #cccccc; }
 
         /* ── Welcome line ── */
         .sa-welcome {
@@ -157,7 +157,7 @@ export default function SuperAdminLogin() {
         }
         .sa-sub {
           font-size: 14px;
-          color: #777;
+          color: #ffffff;
           margin-bottom: 36px;
         }
 
@@ -167,15 +167,15 @@ export default function SuperAdminLogin() {
           width: 100%;
           padding: 13px 16px;
           background: transparent;
-          border: 1px solid #303032;
+          border: 1px solid rgba(255,255,255,0.3);
           border-radius: 10px;
-          color: #cccccc;
+          color: #ffffff;
           font-size: 14px;
           outline: none;
           transition: border-color 0.2s;
           font-family: inherit;
         }
-        .sa-input::placeholder { color: #484848; }
+        .sa-input::placeholder { color: rgba(255,255,255,0.55); }
         .sa-input:focus { border-color: #a78bfa; }
         .sa-input-pw { padding-right: 44px; }
 
@@ -186,7 +186,7 @@ export default function SuperAdminLogin() {
           transform: translateY(-50%);
           background: none;
           border: none;
-          color: #555;
+          color: #ffffff;
           cursor: pointer;
           display: flex;
           align-items: center;
@@ -232,7 +232,7 @@ export default function SuperAdminLogin() {
         .sa-terms {
           margin-top: 20px;
           font-size: 12px;
-          color: #555;
+          color: #ffffff;
           line-height: 1.65;
         }
         .sa-terms a { color: #a78bfa; text-decoration: none; }
@@ -392,9 +392,7 @@ export default function SuperAdminLogin() {
 
             {/* Terms */}
             <p className="sa-terms">
-              By signing in, you agree to UpDone Mark's{' '}
-              <a href="/privacy">Privacy Policy</a> and{' '}
-              <a href="/terms">Terms of Service</a>.
+              By signing in, you agree to UpDone Mark's
             </p>
 
           </div>{/* end .sa-form-box */}

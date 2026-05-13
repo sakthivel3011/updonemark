@@ -38,15 +38,28 @@ AOS.init({
 });
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <HelmetProvider>
-      <BrowserRouter>
-        <AuthProvider>
-          <App />
-          <Toaster 
-            position="top-right"
-            toastOptions={{
-              className: 'dark:bg-navy-soft dark:text-offwhite',
+  <HelmetProvider>
+    <BrowserRouter>
+      <AuthProvider>
+        <App />
+        <Toaster 
+          position="top-right"
+          toastOptions={{
+            className: 'dark:bg-navy-soft dark:text-offwhite',
+            style: {
+              borderRadius: '8px',
+              background: '#ffffff',
+              color: '#000000',
+              border: '1px solid #e5e5e5',
+              fontSize: '14px',
+              padding: '12px 16px',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+            },
+            error: {
+              iconTheme: {
+                primary: '#ff8c00',
+                secondary: '#ffffff',
+              },
               style: {
                 borderRadius: '8px',
                 background: '#ffffff',
@@ -56,40 +69,25 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 padding: '12px 16px',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
               },
-              error: {
-                iconTheme: {
-                  primary: '#ff8c00',
-                  secondary: '#ffffff',
-                },
-                style: {
-                  borderRadius: '8px',
-                  background: '#ffffff',
-                  color: '#000000',
-                  border: '1px solid #e5e5e5',
-                  fontSize: '14px',
-                  padding: '12px 16px',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                },
+            },
+            success: {
+              iconTheme: {
+                primary: '#22c55e',
+                secondary: '#ffffff',
               },
-              success: {
-                iconTheme: {
-                  primary: '#22c55e',
-                  secondary: '#ffffff',
-                },
-                style: {
-                  borderRadius: '8px',
-                  background: '#ffffff',
-                  color: '#000000',
-                  border: '1px solid #e5e5e5',
-                  fontSize: '14px',
-                  padding: '12px 16px',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                },
+              style: {
+                borderRadius: '8px',
+                background: '#ffffff',
+                color: '#000000',
+                border: '1px solid #e5e5e5',
+                fontSize: '14px',
+                padding: '12px 16px',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
               },
-            }}
-          />
-        </AuthProvider>
-      </BrowserRouter>
-    </HelmetProvider>
-  </React.StrictMode>,
+            },
+          }}
+        />
+      </AuthProvider>
+    </BrowserRouter>
+  </HelmetProvider>
 );

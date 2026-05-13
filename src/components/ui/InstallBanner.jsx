@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Download, X, Monitor, Smartphone, CheckCircle } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useLocation } from 'react-router-dom';
 import { isSuperAdminAuthenticated } from '../../utils/superAdminAuth';
+import { toast } from 'react-hot-toast';
 
 export default function InstallBanner() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showBanner, setShowBanner] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
+  const toastShownRef = useRef(false); // guard: show success toast only once
   const { user, userRole } = useAuth();
   const location = useLocation();
 
@@ -73,6 +75,10 @@ export default function InstallBanner() {
       setIsInstalled(true);
       window.deferredPWAInstallPrompt = null;
       localStorage.setItem('updone_install_dismissed', 'true');
+      if (!toastShownRef.current) {
+        toastShownRef.current = true;
+        toast.success('UpDone Mark installed successfully! 🎉');
+      }
     };
     window.addEventListener('appinstalled', handleAppInstalled);
 
