@@ -24,7 +24,7 @@ export default defineConfig({
       devOptions: {
         enabled: false
       },
-      includeAssets: ['favicon.ico', 'logo192.png', 'logo512.png'],
+      includeAssets: ['favicon.ico', 'logo192.png', 'logo512.png', 'sitemap.xml', 'robots.txt'],
       manifest: {
         name: 'UpDone Mark',
         short_name: 'UpDone Mark',
@@ -42,7 +42,8 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,xml,txt}'],
+        navigateFallbackDenylist: [/^\/sitemap\.xml$/, /^\/robots\.txt$/],
         runtimeCaching: [{
           urlPattern: /^https:\/\/firestore\.googleapis\.com\/.*/i,
           handler: 'NetworkFirst',
