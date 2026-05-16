@@ -1,15 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, User, UserPlus } from 'lucide-react';
+import { Menu, X, User, UserPlus, Download } from 'lucide-react';
 import DarkModeToggle from '../ui/DarkModeToggle';
 import { useAuth } from '../../hooks/useAuth';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isInstalled, setIsInstalled] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, userRole, userStatus, loading } = useAuth();
+
+  // Track PWA Installation
+  useEffect(() => {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                        window.navigator.standalone;
+    setIsInstalled(isStandalone);
+
+    if (window.deferredPWAInstallPrompt) {
+      setDeferredPrompt(window.deferredPWAInstallPrompt);
+    }
+
+    const handlePWAInstallable = () => {
+      setDeferredPrompt(window.deferredPWAInstallPrompt);
+    };
+
+    const handleAppInstalled = () => {
+      setIsInstalled(true);
+      setDeferredPrompt(null);
+    };
+
+    window.addEventListener('pwa-installable', handlePWAInstallable);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    return () => {
+      window.removeEventListener('pwa-installable', handlePWAInstallable);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      setDeferredPrompt(null);
+    }
+  };
 
   // Check if user has previously signed up (localStorage check)
   const hasUserSignedUp = () => {
@@ -65,7 +104,7 @@ export default function Navbar() {
     <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ease-out ${scrolled ? 'bg-white dark:bg-neutral-900 shadow-xl shadow-black/10 dark:shadow-black/30 py-2 border-b border-gray-100 dark:border-white/10' : 'bg-transparent py-4'}`}>
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         {/* Logo */}
-        <Link to="https://updone.vercel.app" className="flex items-center gap-2 z-50">
+        <Link to="/" className="flex items-center gap-2 z-50">
           <img src="/logo1.png" alt="UpDone Mark Logo" className="h-9 md:h-11 object-contain dark:hidden" />
           <img src="/logo.png" alt="UpDone Mark Logo" className="h-9 md:h-11 object-contain hidden dark:block" />
         </Link>
@@ -82,6 +121,16 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-4">
           <DarkModeToggle />
           
+          {deferredPrompt && !isInstalled && (
+            <button 
+              onClick={handleInstallClick}
+              className="flex items-center gap-2 py-2 px-4 rounded-full font-bold text-sm transition-all duration-300 bg-navy/5 dark:bg-white/5 text-navy dark:text-white hover:bg-navy/10 dark:hover:bg-white/10 border border-navy/10 dark:border-white/10"
+            >
+              <Download size={16} className="text-teal" />
+              Install
+            </button>
+          )}
+
           {!loading && !user && (
             <Link 
               to={shouldShowSignup ? "/coordinator-signup" : "/coordinator-login"}
@@ -114,7 +163,17 @@ export default function Navbar() {
       <div className={`fixed top-0 right-0 h-full w-[85%] max-w-sm bg-gradient-to-b from-white to-offwhite dark:from-neutral-900 dark:to-navy shadow-2xl z-[70] flex flex-col md:hidden transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         {/* Header with Dark Mode and Close X */}
         <div className="flex items-center justify-between p-6">
-          <DarkModeToggle />
+          <div className="flex items-center gap-3">
+            <DarkModeToggle />
+            {deferredPrompt && !isInstalled && (
+              <button 
+                onClick={handleInstallClick}
+                className="flex items-center gap-2 py-2 px-4 rounded-xl font-bold text-xs bg-teal/10 text-teal border border-teal/20"
+              >
+                <Download size={14} /> Install App
+              </button>
+            )}
+          </div>
           <button
             onClick={() => setMobileMenuOpen(false)}
             className="p-2 text-navy dark:text-white hover:text-teal dark:hover:text-teal transition-all duration-300 transform hover:scale-110 hover:rotate-90"

@@ -14,21 +14,11 @@ export default function InstallBanner() {
   const { user, userRole } = useAuth();
   const location = useLocation();
 
-  // Check if user is logged in as admin/coordinator (NOT student scanning)
-  const isAdminOrCoordinator = user && (
-    userRole === 'coordinator' ||
-    userRole === 'collegeadmin' ||
-    userRole === 'superadmin' ||
-    isSuperAdminAuthenticated()
-  );
-
-  // Don't show on public pages or student scan pages
-  const isPublicPage = location.pathname === '/' ||
-    location.pathname === '/scan' ||
-    location.pathname === '/contact' ||
-    location.pathname === '/features' ||
-    location.pathname.includes('/login') ||
-    location.pathname.includes('/signup');
+  // Don't show on student scan pages or specific internal auth pages
+  const isExcludedPage = 
+    location.pathname === '/scan' || 
+    location.pathname.startsWith('/e/') || 
+    location.pathname === '/coordinator/waiting-approval';
 
   // Check if app is already installed
   useEffect(() => {
@@ -46,22 +36,22 @@ export default function InstallBanner() {
   }, []);
 
   useEffect(() => {
-    // Only proceed if user is admin/coordinator and not already installed
-    if (!isAdminOrCoordinator || isPublicPage || isInstalled) return;
+    // Only proceed if not already installed and not on an excluded page
+    if (isExcludedPage || isInstalled) return;
 
     // Check if the prompt is already available globally
     if (window.deferredPWAInstallPrompt) {
       setDeferredPrompt(window.deferredPWAInstallPrompt);
       if (!localStorage.getItem('updone_install_dismissed')) {
-        setShowModal(true);
+        setShowBanner(true);
       }
     }
 
     const handlePWAInstallable = () => {
       setDeferredPrompt(window.deferredPWAInstallPrompt);
-      // Show modal popup for coordinators/admins after login
+      // Show banner reminder
       if (!localStorage.getItem('updone_install_dismissed')) {
-        setShowModal(true);
+        setShowBanner(true);
       }
     };
 
@@ -86,7 +76,7 @@ export default function InstallBanner() {
       window.removeEventListener('pwa-installable', handlePWAInstallable);
       window.removeEventListener('appinstalled', handleAppInstalled);
     };
-  }, [isAdminOrCoordinator, isPublicPage, isInstalled]);
+  }, [isExcludedPage, isInstalled]);
 
   const handleInstall = async () => {
     if (!deferredPrompt) return;
@@ -113,8 +103,8 @@ export default function InstallBanner() {
     setShowBanner(true);
   };
 
-  // Don't render if not admin/coordinator, or on public pages, or already installed
-  if (!isAdminOrCoordinator || isPublicPage || isInstalled) return null;
+  // Don't render if on excluded pages or already installed
+  if (isExcludedPage || isInstalled) return null;
 
   // Show Modal Popup for first-time install prompt
   if (showModal) {
