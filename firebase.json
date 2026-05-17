@@ -10,6 +10,22 @@
     "trailingSlash": false,
     "rewrites": [
       {
+        "source": "/sitemap.xml",
+        "destination": "/sitemap.xml"
+      },
+      {
+        "source": "/robots.txt",
+        "destination": "/robots.txt"
+      },
+      {
+        "source": "/bingsiteauth.xml",
+        "destination": "/bingsiteauth.xml"
+      },
+      {
+        "source": "/googleaeb8c0922c2970d5.html",
+        "destination": "/googleaeb8c0922c2970d5.html"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
@@ -17,6 +33,19 @@
     "headers": [
       {
         "source": "/sitemap.xml",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/xml"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "/bingsiteauth.xml",
         "headers": [
           {
             "key": "Content-Type",
