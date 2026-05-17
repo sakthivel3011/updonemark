@@ -43,7 +43,7 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,xml,txt}'],
-        navigateFallbackDenylist: [/^\/sitemap\.xml$/, /^\/robots\.txt$/, /^\/bingsiteauth\.xml$/, /^\/googleaeb8c0922c2970d5\.html$/],
+        navigateFallbackDenylist: [/^\/sitemap\.xml$/, /^\/robots\.txt$/, /^\/BingSiteAuth\.xml$/, /^\/googleaeb8c0922c2970d5\.html$/],
         runtimeCaching: [{
           urlPattern: /^https:\/\/firestore\.googleapis\.com\/.*/i,
           handler: 'NetworkFirst',

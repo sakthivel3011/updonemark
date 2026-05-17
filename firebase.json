@@ -18,8 +18,8 @@
         "destination": "/robots.txt"
       },
       {
-        "source": "/bingsiteauth.xml",
-        "destination": "/bingsiteauth.xml"
+        "source": "/BingSiteAuth.xml",
+        "destination": "/BingSiteAuth.xml"
       },
       {
         "source": "/googleaeb8c0922c2970d5.html",
@@ -45,7 +45,7 @@
         ]
       },
       {
-        "source": "/bingsiteauth.xml",
+        "source": "/BingSiteAuth.xml",
         "headers": [
           {
             "key": "Content-Type",
