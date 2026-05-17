@@ -19,11 +19,15 @@
       },
       {
         "source": "/BingSiteAuth.xml",
-        "destination": "/bingsiteauth.xml"
+        "destination": "/Bingsiteauth.xml"
       },
       {
         "source": "/bingsiteauth.xml",
-        "destination": "/bingsiteauth.xml"
+        "destination": "/Bingsiteauth.xml"
+      },
+      {
+        "source": "/Bingsiteauth.xml",
+        "destination": "/Bingsiteauth.xml"
       },
       {
         "source": "/googleaeb8c0922c2970d5.html",
@@ -63,6 +67,19 @@
       },
       {
         "source": "/bingsiteauth.xml",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/xml"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "/Bingsiteauth.xml",
         "headers": [
           {
             "key": "Content-Type",
